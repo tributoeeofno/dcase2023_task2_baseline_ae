@@ -17,8 +17,15 @@ class DCASE202XT2(object):
         batch_size = args.batch_size
         print("input dim: %d" % (self.input_dim))
 
-        dataset_name = args.dataset[:11]
-        machine_type = args.dataset[11:]
+        # Dataset identifiers are the dataset name followed by the machine type.
+        # Keep the legacy DCASE prefix convention and explicitly recognize the
+        # custom dataset name so parsing does not depend on a fixed-width slice.
+        dataset_name = (
+            "TOYADMOS2XX"
+            if args.dataset.startswith("TOYADMOS2XX")
+            else args.dataset[:11]
+        )
+        machine_type = args.dataset[len(dataset_name):]
         if args.eval:
             data_path = f'{args.dataset_directory}/{dataset_name.lower()}/eval_data/'
             data_type = "eval"
@@ -106,6 +113,7 @@ class DCASE202XT2(object):
 
 class Datasets:
     DatasetsDic = {
+        'TOYADMOS2XXToyCar':DCASE202XT2,
         'DCASE2026T2ToyDrone':DCASE202XT2,
         'DCASE2026T2ToothBrush':DCASE202XT2,
         'DCASE2026T2SewingMachine':DCASE202XT2,

@@ -486,6 +486,7 @@ def is_enabled_pickle(pickle_path):
 ########################################################################
 YAML_PATH = {
     "legacy":"datasets/machine_type_legacy.yaml",
+    "TOYADMOS2XX":"datasets/machine_type_toyadmos2.yaml",
     "DCASE2023T2_dev":"datasets/machine_type_2023_dev.yaml",
     "DCASE2023T2_eval":"datasets/machine_type_2023_eval.yaml",
     "DCASE2024T2_dev":"datasets/machine_type_2024_dev.yaml",
@@ -497,7 +498,9 @@ YAML_PATH = {
 }
 
 def get_machine_type_dict(dataset_name, mode=True):
-    if dataset_name in ["DCASE2020T2", "DCASE2021T2", "DCASE2022T2"]:
+    if dataset_name == "TOYADMOS2XX":
+        yaml_path = YAML_PATH["TOYADMOS2XX"]
+    elif dataset_name in ["DCASE2020T2", "DCASE2021T2", "DCASE2022T2"]:
         yaml_path = YAML_PATH["legacy"]
     elif dataset_name == "DCASE2023T2" and mode:
         yaml_path = YAML_PATH["DCASE2023T2_dev"]
