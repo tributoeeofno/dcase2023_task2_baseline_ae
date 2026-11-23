@@ -1,8 +1,5 @@
-*
-!.gitignore
-
 # Generated diagnostic artifacts
-results/diagnostics/**/checkpoint.tar
-results/diagnostics/**/*.pth
-results/diagnostics/**/*.pickle
-results/diagnostics/matplotlib/
+/results/diagnostics/**/checkpoint.tar
+/results/diagnostics/**/*.pth
+/results/diagnostics/**/*.pickle
+/results/diagnostics/matplotlib/
