@@ -44,6 +44,12 @@ class DCASE2023T2AE(BaseModel):
     def train(self, epoch):
         if epoch <= self.epoch:
             return
+        if epoch == self.args.epochs + 1 and self.args.score == "MSE":
+            # The extra call is only needed to estimate covariance for MAHALA.
+            # MSE training already fitted its score distribution on the final
+            # regular epoch, so preserve the final checkpoint without another pass.
+            self.save_checkpoint(epoch=self.args.epochs)
+            return
         torch.autograd.set_detect_anomaly(True)
         train_loss = 0
         train_recon_loss = 0
@@ -227,7 +233,11 @@ class DCASE2023T2AE(BaseModel):
                 score_distr_file_path=self.mse_score_distr_file_path
             )
 
-        # save model
+        self.save_checkpoint(epoch=epoch)
+
+    def save_checkpoint(self, epoch):
+        # Keep model and optimizer checkpoint serialization shared by regular
+        # epochs and the MSE no-op final call.
         torch.save(self.model.state_dict(), self.model_path)
         torch.save({
             'epoch':epoch,
@@ -300,10 +310,13 @@ class DCASE2023T2AE(BaseModel):
             decision_threshold = self.calc_decision_threshold(score_distr_file_path=self.mse_score_distr_file_path)
         
         dir_name = "test"
-        inv_cov_source, inv_cov_target = calc_inv_cov(
-            model=self.model,
-            device=self.device
-        )
+        if self.args.score == "MAHALA":
+            inv_cov_source, inv_cov_target = calc_inv_cov(
+                model=self.model,
+                device=self.device
+            )
+        else:
+            inv_cov_source, inv_cov_target = None, None
         for idx, test_loader_tmp in enumerate(self.test_loader):
             section_name = f"section_{self.data.section_id_list[idx]}"
             result_dir = self.result_dir if self.args.dev else self.eval_data_result_dir

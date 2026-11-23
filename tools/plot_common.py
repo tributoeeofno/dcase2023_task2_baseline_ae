@@ -138,12 +138,12 @@ def show_figs(*args, sup_title=None, sup_titlesize=None, dpi=100, width_mm=120, 
                     ax[idx].legend(args[idx].labels)
             elif args[idx].type == 'boxplot':
                 if len(np.shape(args[idx].data2)) > 1:
-                    ax[idx].boxplot((args[idx].data, *args[idx].data2), vert=False, showmeans=True, widths=0.7, labels=args[idx].labels)
+                    ax[idx].boxplot((args[idx].data, *args[idx].data2), vert=False, showmeans=True, widths=0.7, tick_labels=args[idx].labels)
                 else:
                     if len(args[idx].data2) != 0:
-                        ax[idx].boxplot((args[idx].data, args[idx].data2), vert=False, showmeans=True, widths=0.7, labels=args[idx].labels)
+                        ax[idx].boxplot((args[idx].data, args[idx].data2), vert=False, showmeans=True, widths=0.7, tick_labels=args[idx].labels)
                     else:
-                        ax[idx].boxplot(args[idx].data, vert=False, showmeans=True, widths=0.7, labels=args[idx].labels)
+                        ax[idx].boxplot(args[idx].data, vert=False, showmeans=True, widths=0.7, tick_labels=args[idx].labels)
             elif args[idx].type == 'image' :
                 im = plt.imshow(args[idx].data)
                 if args[idx].data.shape[2] == 1:
